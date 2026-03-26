@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.159.0"
+          extended: true
+
+      - name: Build sample site
+        shell: bash
+        run: |
+          set -euo pipefail
+          SITE_DIR="${RUNNER_TEMP}/site"
+          OUT_DIR="${RUNNER_TEMP}/public"
+          mkdir -p "${SITE_DIR}/content" "${SITE_DIR}/assets/renderers" "${SITE_DIR}/_modules"
+          ln -s "${GITHUB_WORKSPACE}" "${SITE_DIR}/_modules/hugo-mod-mermaid"
+
+          cat > "${SITE_DIR}/hugo.toml" <<'EOF'
+          baseURL = "https://example.org/"
+          [module]
+            [[module.mounts]]
+              source = "content"
+              target = "content"
+            [[module.mounts]]
+              source = "assets"
+              target = "assets"
+            [[module.mounts]]
+              source = "_modules/hugo-mod-mermaid/layouts"
+              target = "layouts"
+            [[module.mounts]]
+              source = "_modules/hugo-mod-mermaid/static"
+              target = "static"
+          EOF
+
+          cat > "${SITE_DIR}/assets/renderers/mermaid.mmd" <<'EOF'
+          flowchart TD
+            A[Start] --> B[Done]
+          EOF
+
+          cat > "${SITE_DIR}/content/test.md" <<'EOF'
+          ---
+          title: "Mermaid test"
+          ---
+
+          {{< mermaid src="renderers/mermaid.mmd" />}}
+          EOF
+
+          hugo --source "${SITE_DIR}" --destination "${OUT_DIR}"
+          grep -q 'vendor/hugo-mod-mermaid/hugo-mod-mermaid.js' "${OUT_DIR}/test/index.html"
+          grep -q 'data-hugo-mod-mermaid' "${OUT_DIR}/test/index.html"

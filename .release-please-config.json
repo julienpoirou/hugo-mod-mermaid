@@ -1,0 +1,9 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "package-name": "hugo-mod-mermaid",
+      "include-v-in-tag": true
+    }
+  }
+}

@@ -1,0 +1,28 @@
+name: Lint Commit
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  commitlint:
+    if: ${{ github.actor != 'dependabot[bot]' && github.actor != 'renovate[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - run: npm i -D @commitlint/{config-conventional,cli}
+
+      - run: |
+          FROM="${{ github.event.pull_request.base.sha }}"
+          TO="${{ github.sha }}"
+          npx commitlint --from="$FROM" --to="$TO" --verbose
