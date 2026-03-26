@@ -29,8 +29,18 @@ jobs:
           set -euo pipefail
           SITE_DIR="${RUNNER_TEMP}/site"
           OUT_DIR="${RUNNER_TEMP}/public"
-          mkdir -p "${SITE_DIR}/content" "${SITE_DIR}/assets/renderers" "${SITE_DIR}/_modules"
+          mkdir -p "${SITE_DIR}/content" "${SITE_DIR}/assets/renderers" "${SITE_DIR}/layouts/_default" "${SITE_DIR}/_modules"
           ln -s "${GITHUB_WORKSPACE}" "${SITE_DIR}/_modules/hugo-mod-mermaid"
+
+          cat > "${SITE_DIR}/layouts/_default/single.html" <<'EOF'
+          <!DOCTYPE html>
+          <html><body>{{ .Content }}</body></html>
+          EOF
+
+          cat > "${SITE_DIR}/layouts/_default/list.html" <<'EOF'
+          <!DOCTYPE html>
+          <html><body>{{ .Content }}</body></html>
+          EOF
 
           cat > "${SITE_DIR}/hugo.toml" <<'EOF'
           baseURL = "https://example.org/"
@@ -41,6 +51,9 @@ jobs:
             [[module.mounts]]
               source = "assets"
               target = "assets"
+            [[module.mounts]]
+              source = "layouts"
+              target = "layouts"
             [[module.mounts]]
               source = "_modules/hugo-mod-mermaid/layouts"
               target = "layouts"
