@@ -1,0 +1,11 @@
+.hugo-mod-mermaid__output svg {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+.hugo-mod-mermaid__output.is-error {
+  color: #b42318;
+  font-family: monospace;
+  white-space: pre-wrap;
+}

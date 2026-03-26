@@ -1,0 +1,27 @@
+{{- $iconsURL := "vendor/hugo-mod-mermaid/icons.json" | relURL -}}
+{{- $source := .Inner -}}
+{{- $src := .Get "src" -}}
+{{- $encodedSource := "" -}}
+{{- with .Get "b64" -}}
+  {{- $encodedSource = . -}}
+{{- end -}}
+{{- if ne $src "" -}}
+  {{- $source = readFile (printf "assets/%s" $src) -}}
+{{- end -}}
+{{- if not (.Page.Scratch.Get "hugoModMermaidLoaded") -}}
+  <script src="{{ "vendor/hugo-mod-mermaid/mermaid.min.js" | relURL }}"></script>
+  <script src="{{ "vendor/hugo-mod-mermaid/mermaid-zenuml.min.js" | relURL }}"></script>
+  <link rel="stylesheet" href="{{ "vendor/hugo-mod-mermaid/hugo-mod-mermaid.css" | relURL }}">
+  <script src="{{ "vendor/hugo-mod-mermaid/hugo-mod-mermaid.js" | relURL }}"></script>
+  {{- .Page.Scratch.Set "hugoModMermaidLoaded" true -}}
+{{- end -}}
+{{- if eq $encodedSource "" -}}
+  {{- $source = trim $source " \n\r\t" -}}
+  {{- if eq $source "" -}}
+    {{- errorf "The %q shortcode requires one of: inner content, b64, or src. File: %s" .Name .Page.File.Path -}}
+  {{- end -}}
+  {{- $encodedSource = $source | base64Encode -}}
+{{- end -}}
+<div class="hugo-mod-mermaid" data-hugo-mod-mermaid data-icons-url="{{ $iconsURL }}" data-source="{{ $encodedSource }}">
+  <div class="hugo-mod-mermaid__output" data-mermaid-output></div>
+</div>
