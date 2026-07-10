@@ -21,8 +21,19 @@
     if (window.__hugoModMermaidReadyPromise) return window.__hugoModMermaidReadyPromise;
 
     window.__hugoModMermaidReadyPromise = (async () => {
-      // The icon pack URL is injected on the shortcode wrapper to avoid inline config JS.
-      const iconsUrl = document.querySelector("[data-hugo-mod-mermaid]")?.dataset.iconsUrl;
+      // Config is injected on the shortcode wrapper to avoid inline config JS.
+      const wrapper = document.querySelector("[data-hugo-mod-mermaid]");
+      const iconsUrl = wrapper?.dataset.iconsUrl;
+
+      // securityLevel defaults to "strict": mermaid sanitizes labels and
+      // disables raw HTML, which prevents diagram source from injecting
+      // scripts. Only an explicit opt-in on a shortcode can loosen it.
+      // mermaid.initialize is page-global, so the first wrapper that sets a
+      // valid level wins for the whole page.
+      const allowed = ["strict", "loose", "antiscript", "sandbox"];
+      const requested = document.querySelector("[data-hugo-mod-mermaid][data-security-level]")?.dataset.securityLevel;
+      const securityLevel = allowed.includes(requested) ? requested : "strict";
+      const htmlLabels = securityLevel === "loose";
 
       if (window.zenuml && window.mermaid.registerExternalDiagrams) {
         await window.mermaid.registerExternalDiagrams([window.zenuml]);
@@ -38,10 +49,10 @@
       }
 
       window.mermaid.initialize({
-        securityLevel: "loose",
+        securityLevel,
         startOnLoad: false,
         flowchart: {
-          htmlLabels: true,
+          htmlLabels,
           useMaxWidth: true
         },
         sequence: {

@@ -26,6 +26,6 @@
   {{- end -}}
   {{- $encodedSource = $source | base64Encode -}}
 {{- end -}}
-<div class="hugo-mod-mermaid" data-hugo-mod-mermaid data-icons-url="{{ $iconsURL }}" data-source="{{ $encodedSource }}">
+<div class="hugo-mod-mermaid" data-hugo-mod-mermaid data-icons-url="{{ $iconsURL }}"{{ with .Get "security" }} data-security-level="{{ . }}"{{ end }} data-source="{{ $encodedSource }}">
   <div class="hugo-mod-mermaid__output" data-mermaid-output></div>
 </div>
