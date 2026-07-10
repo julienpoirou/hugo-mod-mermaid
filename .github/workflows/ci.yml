@@ -81,7 +81,7 @@ jobs:
             A[Début] --> B[Étape n°1 — fin]
           {{< /mermaid >}}
 
-          {{< mermaid b64="\${B64_SOURCE}" />}}
+          {{< mermaid b64="${B64_SOURCE}" />}}
           EOF
 
           hugo --source "${SITE_DIR}" --destination "${OUT_DIR}"
@@ -112,6 +112,13 @@ jobs:
           grep -o 'data-source="[^"]*"' "${PAGE}" | sed -n '2p' \
             | sed 's/data-source="//;s/"$//;s/&#43;/+/g' | base64 -d \
             | grep -q "Étape n°1 — fin"
+
+          # The b64 shortcode (3rd wrapper, in document order) actually
+          # decodes the source: a shell variable inside an unquoted heredoc
+          # must expand, not be passed through literally.
+          grep -o 'data-source="[^"]*"' "${PAGE}" | sed -n '3p' \
+            | sed 's/data-source="//;s/"$//;s/&#43;/+/g' | base64 -d \
+            | grep -q '^flowchart LR$'
 
           # zenuml="true" loads the extension once, deduped page-wide, and
           # security="loose" is forwarded as a data attribute.
