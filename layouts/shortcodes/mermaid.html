@@ -9,10 +9,10 @@
   {{- $source = readFile (printf "assets/%s" $src) -}}
 {{- end -}}
 {{- if not (.Page.Scratch.Get "hugoModMermaidLoaded") -}}
-  <script src="{{ "vendor/hugo-mod-mermaid/mermaid.min.js" | relURL }}"></script>
-  <script src="{{ "vendor/hugo-mod-mermaid/mermaid-zenuml.min.js" | relURL }}"></script>
+  <script defer src="{{ "vendor/hugo-mod-mermaid/mermaid.min.js" | relURL }}"></script>
+  <script defer src="{{ "vendor/hugo-mod-mermaid/mermaid-zenuml.min.js" | relURL }}"></script>
   <link rel="stylesheet" href="{{ "vendor/hugo-mod-mermaid/hugo-mod-mermaid.css" | relURL }}">
-  <script src="{{ "vendor/hugo-mod-mermaid/hugo-mod-mermaid.js" | relURL }}"></script>
+  <script defer src="{{ "vendor/hugo-mod-mermaid/hugo-mod-mermaid.js" | relURL }}"></script>
   {{- .Page.Scratch.Set "hugoModMermaidLoaded" true -}}
 {{- end -}}
 {{- if eq $encodedSource "" -}}
