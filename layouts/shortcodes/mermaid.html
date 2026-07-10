@@ -1,4 +1,4 @@
-{{- $iconsURL := "vendor/hugo-mod-mermaid/icons.json" | relURL -}}
+{{- $icons := resources.Get "vendor/hugo-mod-mermaid/icons.json" | fingerprint "sha256" -}}
 {{- $zenuml := eq (printf "%v" (or (.Get "zenuml") "false")) "true" -}}
 {{- $source := or .Inner "" -}}
 {{- $src := or (.Get "src") "" -}}
@@ -10,13 +10,17 @@
   {{- $source = readFile (printf "assets/%s" $src) -}}
 {{- end -}}
 {{- if not (.Page.Scratch.Get "hugoModMermaidLoaded") -}}
-  <script defer src="{{ "vendor/hugo-mod-mermaid/mermaid.min.js" | relURL }}"></script>
-  <link rel="stylesheet" href="{{ "vendor/hugo-mod-mermaid/hugo-mod-mermaid.css" | relURL }}">
-  <script defer src="{{ "vendor/hugo-mod-mermaid/hugo-mod-mermaid.js" | relURL }}"></script>
+  {{- $lib := resources.Get "vendor/hugo-mod-mermaid/mermaid.min.js" | fingerprint "sha256" -}}
+  {{- $style := resources.Get "vendor/hugo-mod-mermaid/hugo-mod-mermaid.css" | fingerprint "sha256" -}}
+  {{- $glue := resources.Get "vendor/hugo-mod-mermaid/hugo-mod-mermaid.js" | fingerprint "sha256" -}}
+  <script defer src="{{ $lib.RelPermalink }}" integrity="{{ $lib.Data.Integrity }}"></script>
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
+  <script defer src="{{ $glue.RelPermalink }}" integrity="{{ $glue.Data.Integrity }}"></script>
   {{- .Page.Scratch.Set "hugoModMermaidLoaded" true -}}
 {{- end -}}
 {{- if and $zenuml (not (.Page.Scratch.Get "hugoModMermaidZenumlLoaded")) -}}
-  <script defer src="{{ "vendor/hugo-mod-mermaid/mermaid-zenuml.min.js" | relURL }}"></script>
+  {{- $zenlib := resources.Get "vendor/hugo-mod-mermaid/mermaid-zenuml.min.js" | fingerprint "sha256" -}}
+  <script defer src="{{ $zenlib.RelPermalink }}" integrity="{{ $zenlib.Data.Integrity }}"></script>
   {{- .Page.Scratch.Set "hugoModMermaidZenumlLoaded" true -}}
 {{- end -}}
 {{- if eq $encodedSource "" -}}
@@ -26,6 +30,6 @@
   {{- end -}}
   {{- $encodedSource = $source | base64Encode -}}
 {{- end -}}
-<div class="hugo-mod-mermaid" data-hugo-mod-mermaid data-icons-url="{{ $iconsURL }}"{{ with .Get "security" }} data-security-level="{{ . }}"{{ end }} data-source="{{ $encodedSource }}">
+<div class="hugo-mod-mermaid" data-hugo-mod-mermaid data-icons-url="{{ $icons.RelPermalink }}"{{ with .Get "security" }} data-security-level="{{ . }}"{{ end }} data-source="{{ $encodedSource }}">
   <div class="hugo-mod-mermaid__output" data-mermaid-output></div>
 </div>

@@ -58,8 +58,8 @@ jobs:
               source = "_modules/hugo-mod-mermaid/layouts"
               target = "layouts"
             [[module.mounts]]
-              source = "_modules/hugo-mod-mermaid/static"
-              target = "static"
+              source = "_modules/hugo-mod-mermaid/assets"
+              target = "assets"
           EOF
 
           cat > "${SITE_DIR}/assets/renderers/mermaid.mmd" <<'EOF'
@@ -87,15 +87,26 @@ jobs:
           hugo --source "${SITE_DIR}" --destination "${OUT_DIR}"
           PAGE="${OUT_DIR}/test/index.html"
 
-          # Assets injected, and only once for the whole page.
-          grep -q 'vendor/hugo-mod-mermaid/hugo-mod-mermaid.js' "${PAGE}"
-          test "$(grep -c 'vendor/hugo-mod-mermaid/mermaid.min.js' "${PAGE}")" -eq 1
+          # Assets are fingerprinted (cache-busting) and injected only once
+          # for the whole page.
+          grep -oE 'vendor/hugo-mod-mermaid/hugo-mod-mermaid\.[0-9a-f]+\.js' "${PAGE}"
+          test "$(grep -oE 'vendor/hugo-mod-mermaid/mermaid\.min\.[0-9a-f]+\.js' "${PAGE}" | wc -l)" -eq 1
+
+          # Every injected asset ships a matching Subresource Integrity hash.
+          test "$(grep -c 'integrity="sha256-' "${PAGE}")" -eq 3
+
+          # The icons.json url used at runtime is fingerprinted too.
+          grep -oE 'data-icons-url="[^"]*icons\.[0-9a-f]+\.json"' "${PAGE}"
+
+          # The fingerprinted glue js is actually published at that path.
+          JS_PATH=$(grep -oE 'vendor/hugo-mod-mermaid/hugo-mod-mermaid\.[0-9a-f]+\.js' "${PAGE}" | head -1)
+          test -f "${OUT_DIR}/${JS_PATH}"
 
           # All three input modes produce a wrapper.
           test "$(grep -c 'data-hugo-mod-mermaid' "${PAGE}")" -eq 3
 
           # zenuml is not loaded unless a shortcode opts in.
-          if grep -q 'mermaid-zenuml.min.js' "${PAGE}"; then
+          if grep -qE 'mermaid-zenuml\.min\.[0-9a-f]+\.js' "${PAGE}"; then
             echo "zenuml must not load without zenuml=true" >&2
             exit 1
           fi
@@ -138,7 +149,7 @@ jobs:
           {{< /mermaid >}}
           EOF
           hugo --source "${SITE_DIR}" --destination "${OUT_DIR}"
-          test "$(grep -c 'mermaid-zenuml.min.js' "${OUT_DIR}/optin/index.html")" -eq 1
+          test "$(grep -oE 'mermaid-zenuml\.min\.[0-9a-f]+\.js' "${OUT_DIR}/optin/index.html" | wc -l)" -eq 1
           grep -q 'data-security-level="loose"' "${OUT_DIR}/optin/index.html"
 
           # An empty source must fail the build explicitly.

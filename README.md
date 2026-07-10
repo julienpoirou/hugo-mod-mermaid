@@ -95,13 +95,21 @@ shortcodes appear.
 
 ## Output assets
 
-The module publishes:
+The module publishes, through Hugo Pipes (`resources.Get` + `fingerprint`),
+so each file's published URL includes a content hash for cache-busting and
+ships a Subresource Integrity attribute (`icons.json` is fetched at runtime
+via `fetch()` rather than a script/link tag, but is fingerprinted the same
+way for the same cache-busting benefit):
 
-- `vendor/hugo-mod-mermaid/mermaid.min.js`
-- `vendor/hugo-mod-mermaid/mermaid-zenuml.min.js`
-- `vendor/hugo-mod-mermaid/icons.json`
-- `vendor/hugo-mod-mermaid/hugo-mod-mermaid.js`
-- `vendor/hugo-mod-mermaid/hugo-mod-mermaid.css`
+- `vendor/hugo-mod-mermaid/mermaid.min.<hash>.js`
+- `vendor/hugo-mod-mermaid/mermaid-zenuml.min.<hash>.js` (only when `zenuml="true"`)
+- `vendor/hugo-mod-mermaid/icons.<hash>.json`
+- `vendor/hugo-mod-mermaid/hugo-mod-mermaid.<hash>.js`
+- `vendor/hugo-mod-mermaid/hugo-mod-mermaid.<hash>.css`
+
+Source files live under `assets/vendor/hugo-mod-mermaid/` in this
+repository; see [`VENDORED.md`](VENDORED.md) for their unfingerprinted
+checksums.
 
 ## Development
 
