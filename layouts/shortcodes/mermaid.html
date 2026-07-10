@@ -1,6 +1,6 @@
 {{- $iconsURL := "vendor/hugo-mod-mermaid/icons.json" | relURL -}}
-{{- $source := .Inner -}}
-{{- $src := .Get "src" -}}
+{{- $source := or .Inner "" -}}
+{{- $src := or (.Get "src") "" -}}
 {{- $encodedSource := "" -}}
 {{- with .Get "b64" -}}
   {{- $encodedSource = . -}}
