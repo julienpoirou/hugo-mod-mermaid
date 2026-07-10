@@ -67,14 +67,83 @@ jobs:
             A[Start] --> B[Done]
           EOF
 
-          cat > "${SITE_DIR}/content/test.md" <<'EOF'
+          B64_SOURCE=$(printf 'flowchart LR\n  X --> Y' | base64 -w0)
+
+          cat > "${SITE_DIR}/content/test.md" <<EOF
           ---
           title: "Mermaid test"
           ---
 
           {{< mermaid src="renderers/mermaid.mmd" />}}
+
+          {{< mermaid >}}
+          flowchart TD
+            A[Début] --> B[Étape n°1 — fin]
+          {{< /mermaid >}}
+
+          {{< mermaid b64="\${B64_SOURCE}" />}}
           EOF
 
           hugo --source "${SITE_DIR}" --destination "${OUT_DIR}"
-          grep -q 'vendor/hugo-mod-mermaid/hugo-mod-mermaid.js' "${OUT_DIR}/test/index.html"
-          grep -q 'data-hugo-mod-mermaid' "${OUT_DIR}/test/index.html"
+          PAGE="${OUT_DIR}/test/index.html"
+
+          # Assets injected, and only once for the whole page.
+          grep -q 'vendor/hugo-mod-mermaid/hugo-mod-mermaid.js' "${PAGE}"
+          test "$(grep -c 'vendor/hugo-mod-mermaid/mermaid.min.js' "${PAGE}")" -eq 1
+
+          # All three input modes produce a wrapper.
+          test "$(grep -c 'data-hugo-mod-mermaid' "${PAGE}")" -eq 3
+
+          # zenuml is not loaded unless a shortcode opts in.
+          if grep -q 'mermaid-zenuml.min.js' "${PAGE}"; then
+            echo "zenuml must not load without zenuml=true" >&2
+            exit 1
+          fi
+
+          # securityLevel is not loosened unless a shortcode opts in.
+          if grep -q 'data-security-level' "${PAGE}"; then
+            echo "no security-level attribute expected by default" >&2
+            exit 1
+          fi
+
+          # Inline UTF-8 source survives the base64 round-trip untouched.
+          # Hugo escapes "+" as "&#43;" in attributes; browsers unescape it,
+          # so the assertion must do the same before decoding.
+          grep -o 'data-source="[^"]*"' "${PAGE}" | sed -n '2p' \
+            | sed 's/data-source="//;s/"$//;s/&#43;/+/g' | base64 -d \
+            | grep -q "Étape n°1 — fin"
+
+          # zenuml="true" loads the extension once, deduped page-wide, and
+          # security="loose" is forwarded as a data attribute.
+          cat > "${SITE_DIR}/content/optin.md" <<'EOF'
+          ---
+          title: "opt-in"
+          ---
+
+          {{< mermaid zenuml="true" security="loose" >}}
+          zenuml
+            A->B: hi
+          {{< /mermaid >}}
+
+          {{< mermaid zenuml="true" >}}
+          zenuml
+            C->D: yo
+          {{< /mermaid >}}
+          EOF
+          hugo --source "${SITE_DIR}" --destination "${OUT_DIR}"
+          test "$(grep -c 'mermaid-zenuml.min.js' "${OUT_DIR}/optin/index.html")" -eq 1
+          grep -q 'data-security-level="loose"' "${OUT_DIR}/optin/index.html"
+
+          # An empty source must fail the build explicitly.
+          cat > "${SITE_DIR}/content/invalid.md" <<'EOF'
+          ---
+          title: "invalid"
+          ---
+
+          {{< mermaid >}}
+          {{< /mermaid >}}
+          EOF
+          if hugo --source "${SITE_DIR}" --destination "${RUNNER_TEMP}/public-invalid"; then
+            echo "expected the build to fail on an empty shortcode source" >&2
+            exit 1
+          fi
