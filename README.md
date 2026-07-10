@@ -16,7 +16,8 @@ Standalone Hugo module for Mermaid rendering with vendored Mermaid, ZenUML, and 
 
 - Render diagrams with `{{< mermaid >}}`
 - Support `src`, `b64`, and inline body input modes
-- Ship vendored Mermaid, ZenUML, and icons
+- Ship vendored Mermaid, ZenUML (opt-in), and icons
+- Render with `securityLevel: strict` by default, loosened only on opt-in
 - Initialize icon packs without inline config blocks in the page
 - Fail explicitly at build time when shortcode source is missing
 
@@ -51,6 +52,46 @@ File source:
 ```text
 {{< mermaid src="renderers/mermaid.mmd" />}}
 ```
+
+Base64 source (when the diagram text would otherwise conflict with Markdown
+or shortcode parsing):
+
+```text
+{{< mermaid b64="Zmxvd2NoYXJ0IExSCiAgWCAtLT4gWQ==" />}}
+```
+
+## Security
+
+Rendering runs with Mermaid `securityLevel: "strict"` **by default**: labels
+are sanitized and raw HTML is disabled, so diagram source cannot inject
+scripts. Only loosen this for diagrams you fully control, per page, via the
+`security` param (`strict` | `loose` | `antiscript` | `sandbox`):
+
+```text
+{{< mermaid security="loose" >}}
+flowchart TD
+  A --> B
+{{< /mermaid >}}
+```
+
+`mermaid.initialize` is page-global, so the first shortcode that sets a valid
+`security` value determines the level for the whole page. Do not use `loose`
+on pages that render untrusted diagram source.
+
+## ZenUML (opt-in)
+
+The ZenUML extension (~4.1 MB) is **not** loaded by default. Enable it per
+shortcode for ZenUML diagrams:
+
+```text
+{{< mermaid zenuml="true" >}}
+zenuml
+  Alice->Bob: Hello
+{{< /mermaid >}}
+```
+
+It is injected once per page, regardless of how many `zenuml="true"`
+shortcodes appear.
 
 ## Output assets
 
