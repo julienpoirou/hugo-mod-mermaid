@@ -89,8 +89,8 @@ jobs:
 
           # Assets are fingerprinted (cache-busting) and injected only once
           # for the whole page.
-          grep -oE 'vendor/hugo-mod-mermaid/hugo-mod-mermaid\.[0-9a-f]+\.js' "${PAGE}"
-          test "$(grep -oE 'vendor/hugo-mod-mermaid/mermaid\.min\.[0-9a-f]+\.js' "${PAGE}" | wc -l)" -eq 1
+          grep -oE 'libs/hugo-mod-mermaid/hugo-mod-mermaid\.[0-9a-f]+\.js' "${PAGE}"
+          test "$(grep -oE 'libs/hugo-mod-mermaid/mermaid\.min\.[0-9a-f]+\.js' "${PAGE}" | wc -l)" -eq 1
 
           # Every injected asset ships a matching Subresource Integrity hash.
           test "$(grep -c 'integrity="sha256-' "${PAGE}")" -eq 3
@@ -99,7 +99,7 @@ jobs:
           grep -oE 'data-icons-url="[^"]*icons\.[0-9a-f]+\.json"' "${PAGE}"
 
           # The fingerprinted glue js is actually published at that path.
-          JS_PATH=$(grep -oE 'vendor/hugo-mod-mermaid/hugo-mod-mermaid\.[0-9a-f]+\.js' "${PAGE}" | head -1)
+          JS_PATH=$(grep -oE 'libs/hugo-mod-mermaid/hugo-mod-mermaid\.[0-9a-f]+\.js' "${PAGE}" | head -1)
           test -f "${OUT_DIR}/${JS_PATH}"
 
           # All three input modes produce a wrapper.

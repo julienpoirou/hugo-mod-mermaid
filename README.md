@@ -101,13 +101,13 @@ ships a Subresource Integrity attribute (`icons.json` is fetched at runtime
 via `fetch()` rather than a script/link tag, but is fingerprinted the same
 way for the same cache-busting benefit):
 
-- `vendor/hugo-mod-mermaid/mermaid.min.<hash>.js`
-- `vendor/hugo-mod-mermaid/mermaid-zenuml.min.<hash>.js` (only when `zenuml="true"`)
-- `vendor/hugo-mod-mermaid/icons.<hash>.json`
-- `vendor/hugo-mod-mermaid/hugo-mod-mermaid.<hash>.js`
-- `vendor/hugo-mod-mermaid/hugo-mod-mermaid.<hash>.css`
+- `libs/hugo-mod-mermaid/mermaid.min.<hash>.js`
+- `libs/hugo-mod-mermaid/mermaid-zenuml.min.<hash>.js` (only when `zenuml="true"`)
+- `libs/hugo-mod-mermaid/icons.<hash>.json`
+- `libs/hugo-mod-mermaid/hugo-mod-mermaid.<hash>.js`
+- `libs/hugo-mod-mermaid/hugo-mod-mermaid.<hash>.css`
 
-Source files live under `assets/vendor/hugo-mod-mermaid/` in this
+Source files live under `assets/libs/hugo-mod-mermaid/` in this
 repository; see [`VENDORED.md`](VENDORED.md) for their unfingerprinted
 checksums.
 
