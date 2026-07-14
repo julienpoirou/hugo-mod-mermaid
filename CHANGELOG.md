@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/julienpoirou/hugo-mod-mermaid/compare/v0.1.2...v0.1.3) (2026-07-14)
+
+
+### Corrections 🐛
+
+* **assets:** Move vendored assets out of a "vendor/" path component ([b8612e8](https://github.com/julienpoirou/hugo-mod-mermaid/commit/b8612e800ca5dd0cca47150e14b39a1d89373157))
+
 ## [0.1.2](https://github.com/julienpoirou/hugo-mod-mermaid/compare/v0.1.1...v0.1.2) (2026-07-10)
 
 
