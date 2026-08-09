@@ -1,33 +1,22 @@
 # Third-party licenses
 
-This module redistributes the following third-party software. See
-`VENDORED.md` for exact versions, sources, and checksums.
+Third-party software redistributed by this module. Versions, sources, and checksums: [VENDORED.md](VENDORED.md).
 
----
+| Library | Upstream | License | Copyright |
+|---|---|---|---|
+| Mermaid | <https://github.com/mermaid-js/mermaid> | MIT | © 2014-2022 Knut Sveidqvist |
+| @mermaid-js/mermaid-zenuml | <https://github.com/mermaid-js/mermaid> | MIT | © 2014-2022 Knut Sveidqvist |
+| SVG Logos (`icons.json`, packaged as @iconify-json/logos) | <https://github.com/gilbarbara/logos> | CC0-1.0 | Public domain dedication |
 
-## Mermaid
+The `logos` icon set is dedicated to the public domain under CC0 1.0 Universal (<https://creativecommons.org/publicdomain/zero/1.0/>), so no attribution is required. Individual brand logos remain the property of their respective owners and are subject to their own trademarks and usage terms.
 
-- Upstream: <https://github.com/mermaid-js/mermaid>
-- License: MIT
-- Copyright © 2014-2022 Knut Sveidqvist
-
-## @mermaid-js/mermaid-zenuml
-
-- Upstream: <https://github.com/mermaid-js/mermaid>
-- License: MIT
-
-## @iconify-json/logos (icons.json)
-
-- Upstream: <https://github.com/iconify/icon-sets>
-- License: MIT for the icon-set packaging/metadata. Individual brand logos
-  remain the property of their respective owners and are subject to their own
-  trademarks and usage terms.
-
----
-
-The MIT-licensed components above are distributed under the following terms:
+## MIT License
 
 ```text
+The MIT License (MIT)
+
+Copyright (c) 2014 - 2022 Knut Sveidqvist
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights

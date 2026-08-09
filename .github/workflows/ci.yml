@@ -78,7 +78,7 @@ jobs:
 
           {{< mermaid >}}
           flowchart TD
-            A[Début] --> B[Étape n°1 — fin]
+            A[Début] --> B[Étape n°1 - fin]
           {{< /mermaid >}}
 
           {{< mermaid b64="${B64_SOURCE}" />}}
@@ -122,7 +122,7 @@ jobs:
           # so the assertion must do the same before decoding.
           grep -o 'data-source="[^"]*"' "${PAGE}" | sed -n '2p' \
             | sed 's/data-source="//;s/"$//;s/&#43;/+/g' | base64 -d \
-            | grep -q "Étape n°1 — fin"
+            | grep -q "Étape n°1 - fin"
 
           # The b64 shortcode (3rd wrapper, in document order) actually
           # decodes the source: a shell variable inside an unquoted heredoc
