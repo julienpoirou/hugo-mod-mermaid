@@ -2,70 +2,91 @@
 
 [![CI](https://github.com/julienpoirou/hugo-mod-mermaid/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/julienpoirou/hugo-mod-mermaid/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/julienpoirou/hugo-mod-mermaid/actions/workflows/codeql.yml/badge.svg)](https://github.com/julienpoirou/hugo-mod-mermaid/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/julienpoirou/hugo-mod-mermaid/badge)](https://scorecard.dev/viewer/?uri=github.com/julienpoirou/hugo-mod-mermaid)
 [![Release](https://img.shields.io/github/v/release/julienpoirou/hugo-mod-mermaid?include_prereleases&sort=semver)](https://github.com/julienpoirou/hugo-mod-mermaid/releases)
 [![Hugo Module](https://img.shields.io/badge/Hugo-Module-FF4088?logo=hugo&logoColor=white)](https://gohugo.io/hugo-modules/)
-[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196.svg)](https://www.conventionalcommits.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 <p align="center">
   <img src="./logo.svg" alt="hugo-mod-mermaid logo" width="160" height="160">
 </p>
 
-Standalone Hugo module for Mermaid rendering with vendored Mermaid, ZenUML, and icon-pack assets.
+<p align="center">
+  <strong>Mermaid diagrams in your Hugo pages.</strong><br>
+  One shortcode, vendored Mermaid, ZenUML and icon packs, strict sanitizing by default.
+</p>
 
-## Features
+## Requires
 
-- Render diagrams with `{{< mermaid >}}`
-- Support `src`, `b64`, and inline body input modes
-- Ship vendored Mermaid, ZenUML (opt-in), and icons
-- Render with `securityLevel: strict` by default, loosened only on opt-in
-- Initialize icon packs without inline config blocks in the page
-- Fail explicitly at build time when shortcode source is missing
+- Hugo >= `0.124`. The extended edition is not required.
 
-## Requirements
+## Install
 
-- Hugo `>= 0.124`
-- A Hugo site with Hugo Modules enabled
+**Binary** - Hugo and Go installed locally:
 
-## Installation
-
-Import the module in your Hugo site:
+```bash
+hugo mod init example.com/my-site
+hugo mod get github.com/julienpoirou/hugo-mod-mermaid
+```
 
 ```toml
+# hugo.toml
 [module]
   [[module.imports]]
     path = "github.com/julienpoirou/hugo-mod-mermaid"
 ```
 
+**Container** - Docker installed locally:
+
+```bash
+alias hugo='docker run --rm -v "$PWD":/src -p 1313:1313 hugomods/hugo:go-git hugo'
+hugo mod init example.com/my-site
+hugo mod get github.com/julienpoirou/hugo-mod-mermaid
+```
+
 ## Usage
 
-Inline source:
+**Shortcode** - Raw diagram source between the tags:
 
 ```text
 {{< mermaid >}}
 flowchart TD
-  A[Start] --> B[Done]
+  A[Write Markdown] --> B[hugo build]
+  B --> C[SVG in the browser]
 {{< /mermaid >}}
 ```
 
-File source:
+**Self-closing shortcode** - Source read from a file:
 
 ```text
 {{< mermaid src="renderers/mermaid.mmd" />}}
 ```
 
-Base64 source (when the diagram text would otherwise conflict with Markdown
-or shortcode parsing):
+**Self-closing shortcode** - Source passed as base64:
 
 ```text
 {{< mermaid b64="Zmxvd2NoYXJ0IExSCiAgWCAtLT4gWQ==" />}}
 ```
 
+### Parameters
+
+| Param | Default | Description |
+|---|---|---|
+| inner content | - | Raw diagram source between the opening and closing tags |
+| `src` | - | Path, relative to `assets/`, of a file holding the diagram source |
+| `b64` | - | Base64-encoded diagram source |
+| `security` | `strict` | Mermaid security level: `strict`, `loose`, `antiscript`, `sandbox` |
+| `zenuml` | `false` | Load the ZenUML extension for ZenUML diagrams |
+
+> At least one source input is required. If several are given, `b64` wins over `src`, and `src` wins over the inner content, the others are ignored silently.
+
+> A missing or empty source fails the build with an explicit error rather than emitting a blank page. A syntax error in the diagram is not caught at build time: it surfaces at render time, as Mermaid's message in place of the diagram.
+
+> `src` is resolved with `readFile` from the project root, so the file must live in your own site's `assets/`. A file mounted from a theme or from another module will not be found.
+
 ## Security
 
-Rendering runs with Mermaid `securityLevel: "strict"` **by default**: labels
-are sanitized and raw HTML is disabled, so diagram source cannot inject
-scripts. Only loosen this for diagrams you fully control, per page, via the
-`security` param (`strict` | `loose` | `antiscript` | `sandbox`):
+Rendering runs with Mermaid `securityLevel: "strict"` by default: labels are sanitized and raw HTML is disabled, so diagram source cannot inject scripts. `mermaid.initialize` is page-global, so the first shortcode setting a valid `security` value decides the level for the whole page. Only loosen it on pages whose diagrams you fully control.
 
 ```text
 {{< mermaid security="loose" >}}
@@ -74,14 +95,11 @@ flowchart TD
 {{< /mermaid >}}
 ```
 
-`mermaid.initialize` is page-global, so the first shortcode that sets a valid
-`security` value determines the level for the whole page. Do not use `loose`
-on pages that render untrusted diagram source.
+An unrecognized value falls back to `strict` rather than failing, so a typo can never silently weaken a page.
 
 ## ZenUML (opt-in)
 
-The ZenUML extension (~4.1 MB) is **not** loaded by default. Enable it per
-shortcode for ZenUML diagrams:
+The ZenUML extension is not loaded by default, and is injected once per page however many shortcodes ask for it:
 
 ```text
 {{< mermaid zenuml="true" >}}
@@ -90,39 +108,20 @@ zenuml
 {{< /mermaid >}}
 ```
 
-It is injected once per page, regardless of how many `zenuml="true"`
-shortcodes appear.
+## Rendering
 
-## Output assets
+The diagram is rendered in the reader's browser to inline `<svg>`. Flowcharts and sequence diagrams use `useMaxWidth: true`, so they scale down to their container, and sequence diagrams carry step numbers.
 
-The module publishes, through Hugo Pipes (`resources.Get` + `fingerprint`),
-so each file's published URL includes a content hash for cache-busting and
-ships a Subresource Integrity attribute (`icons.json` is fetched at runtime
-via `fetch()` rather than a script/link tag, but is fingerprinted the same
-way for the same cache-busting benefit):
+- The stylesheet and both scripts are injected once per page, at the first `mermaid` shortcode, in the flow of the content, not in `<head>`. Each one is fingerprinted and carries a Subresource Integrity hash.
+- `mermaid.initialize` runs once per page with `startOnLoad: false`, so this module drives every render itself. Raw HTML labels are enabled only under `security="loose"`.
+- The `logos` icon pack is registered through a loader pointing at a fingerprinted `icons.json`, with no inline configuration block in the page, so a strict Content-Security-Policy without `'unsafe-inline'` still works. The file is published on any page using the shortcode but only downloaded when a diagram actually references a `logos:` icon.
+- For diagrams injected after page load, call `window.HugoModMermaid.renderAll(root)`.
+- Without JavaScript the shortcode leaves an empty block: there is no server-side fallback.
 
-- `libs/hugo-mod-mermaid/mermaid.min.<hash>.js`
-- `libs/hugo-mod-mermaid/mermaid-zenuml.min.<hash>.js` (only when `zenuml="true"`)
-- `libs/hugo-mod-mermaid/icons.<hash>.json`
-- `libs/hugo-mod-mermaid/hugo-mod-mermaid.<hash>.js`
-- `libs/hugo-mod-mermaid/hugo-mod-mermaid.<hash>.css`
+## Vendored assets
 
-Source files live under `assets/libs/hugo-mod-mermaid/` in this
-repository; see [`VENDORED.md`](VENDORED.md) for their unfingerprinted
-checksums.
+Mermaid `11.12.0` (2.7 MB), the opt-in ZenUML extension `0.2.x` (4.1 MB) and the `logos` icon set (7.0 MB, CC0) ship inside the module, no CDN, no third-party request at page load. Provenance, licenses and SHA-256 are recorded in [VENDORED.md](VENDORED.md).
 
-## Development
+## License
 
-```bash
-git clone https://github.com/julienpoirou/hugo-mod-mermaid
-cd hugo-mod-mermaid
-```
-
-The main verification is handled by GitHub Actions with a minimal Hugo site that mounts the module and builds a sample page.
-
-## Contributing
-
-- Use Conventional Commits for branch history
-- Update docs or changelog when behavior changes
-- Keep Mermaid examples valid across current Mermaid runtime versions
-- See [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md) for contribution guidance
+MIT © 2025 [Julien Poirou](mailto:julienpoirou@protonmail.com)
