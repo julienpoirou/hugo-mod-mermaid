@@ -9,3 +9,10 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    groups:
+      # The codeql-action sub-actions (init / autobuild / analyze) must always
+      # run the same version; group them so they bump together in one PR
+      # instead of skewing (init on X, analyze on Y -> "config for X, running Y").
+      codeql-action:
+        patterns:
+          - "github/codeql-action*"
