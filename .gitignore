@@ -5,3 +5,6 @@
 .hugo_build.lock
 public/
 resources/
+
+# Node tooling
+node_modules/
