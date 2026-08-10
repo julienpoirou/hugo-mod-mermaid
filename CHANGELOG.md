@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/julienpoirou/hugo-mod-mermaid/compare/v0.1.3...v0.2.0) (2026-08-10)
+
+
+### Features ✨
+
+* **assets:** Update mermaid to 11.16.1, zenuml to 0.2.3, logos to 1.2.12 ([c2b6bac](https://github.com/julienpoirou/hugo-mod-mermaid/commit/c2b6bac31f3b38701ac5e17908e5c8fa449546ef))
+
 ## [0.1.3](https://github.com/julienpoirou/hugo-mod-mermaid/compare/v0.1.2...v0.1.3) (2026-07-14)
 
 
