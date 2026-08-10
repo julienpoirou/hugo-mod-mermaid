@@ -6,13 +6,16 @@ All files live in `assets/libs/hugo-mod-mermaid/`.
 
 | File | Library | Version | License | SHA-256 |
 |---|---|---|---|---|
-| `mermaid.min.js` | [Mermaid](https://github.com/mermaid-js/mermaid) | 11.12.0 | MIT | `07e37dfa97b337ccc85365d57eddf99b9706f09db3b59b260d0333b23b343c4b` |
-| `mermaid-zenuml.min.js` | [@mermaid-js/mermaid-zenuml](https://github.com/mermaid-js/mermaid) | 0.2.2 | MIT | `e9ae30fea40757cf9346ffd01cae93e5607dabf136375f20820f11d30030c061` |
-| `icons.json` | [SVG Logos](https://github.com/gilbarbara/logos) (via @iconify-json/logos) | 1.2.10 | CC0-1.0 | `ba3397c6499ca7d7476e21d8e83b56b4f217c6a959b5e80efd2e832d7c444d03` |
+| `mermaid.min.js` | [Mermaid](https://github.com/mermaid-js/mermaid) | 11.16.1 | MIT | `18327bef70d96fb505fe7287d9f6a7362ebf07ff6576ddfaffb1a06f3e1a2954` |
+| `mermaid-zenuml.min.js` | [@mermaid-js/mermaid-zenuml](https://github.com/mermaid-js/mermaid) | 0.2.3 | MIT | `9c909136299b14c7c890facebd348e8fdf0de804d14a1a9c0b8a422caee8e4e4` |
+| `icons.json` | [SVG Logos](https://github.com/gilbarbara/logos) (via @iconify-json/logos) | 1.2.12 | CC0-1.0 | `09198ad7e85796fb49b8d70425c35051c17e54131889262eaf25dbaf06d6eab8` |
 
-Sources: `https://cdn.jsdelivr.net/npm/mermaid@11.12.0/dist/mermaid.min.js`, `https://www.npmjs.com/package/@mermaid-js/mermaid-zenuml/v/0.2.2`, `https://cdn.jsdelivr.net/npm/@iconify-json/logos@1.2.10/icons.json`.
+Sources: `https://cdn.jsdelivr.net/npm/mermaid@11.16.1/dist/mermaid.min.js`, `https://cdn.jsdelivr.net/npm/@mermaid-js/mermaid-zenuml@0.2.3/dist/mermaid-zenuml.min.js`, `https://cdn.jsdelivr.net/npm/@iconify-json/logos@1.2.12/icons.json`.
 
-`mermaid-zenuml.min.js` is not a pristine upstream file. It is the package's `esm.min` chunk, patched to drop the use-strict prologue and to expose `window.zenuml`, which is why its checksum matches nothing published as-is. Re-applying that patch is part of updating it.
+`mermaid-zenuml.min.js` is not a pristine upstream file, which is why its checksum matches nothing published as-is. Two edits turn `dist/mermaid-zenuml.min.js` into the vendored copy, and re-applying them is part of updating it:
+
+1. Drop the leading `"use strict";`.
+2. Append `window.zenuml = globalThis["mermaid-zenuml"]` and keep the `// NOTE 需移除 use strict 并添加全局变量 zenuml` header line at the top.
 
 First-party files, under this repository's [LICENSE](LICENSE): `hugo-mod-mermaid.js`, `hugo-mod-mermaid.css`.
 

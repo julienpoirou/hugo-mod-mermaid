@@ -4,29 +4,29 @@
   "version": "0.0.0",
   "description": "Declares the third-party libraries this module vendors under assets/libs/. Never installed at build time or at runtime: it exists so Dependabot tracks their versions and GitHub raises security alerts on the code we actually ship. See ../VENDORED.md.",
   "dependencies": {
-    "@iconify-json/logos": "1.2.10",
-    "@mermaid-js/mermaid-zenuml": "0.2.2",
-    "mermaid": "11.12.0"
+    "@iconify-json/logos": "1.2.12",
+    "@mermaid-js/mermaid-zenuml": "0.2.3",
+    "mermaid": "11.16.1"
   },
   "vendored": {
     "mermaid.min.js": {
       "path": "assets/libs/hugo-mod-mermaid/mermaid.min.js",
       "package": "mermaid",
       "source": "https://cdn.jsdelivr.net/npm/mermaid@{version}/dist/mermaid.min.js",
-      "sha256": "07e37dfa97b337ccc85365d57eddf99b9706f09db3b59b260d0333b23b343c4b"
+      "sha256": "18327bef70d96fb505fe7287d9f6a7362ebf07ff6576ddfaffb1a06f3e1a2954"
     },
     "mermaid-zenuml.min.js": {
       "path": "assets/libs/hugo-mod-mermaid/mermaid-zenuml.min.js",
       "package": "@mermaid-js/mermaid-zenuml",
-      "source": "https://www.npmjs.com/package/@mermaid-js/mermaid-zenuml/v/{version}",
-      "note": "Taken from the package's esm.min chunk, then patched to drop the use-strict prologue and expose window.zenuml, which is why the checksum matches no single upstream file.",
-      "sha256": "e9ae30fea40757cf9346ffd01cae93e5607dabf136375f20820f11d30030c061"
+      "source": "https://cdn.jsdelivr.net/npm/@mermaid-js/mermaid-zenuml@{version}/dist/mermaid-zenuml.min.js",
+      "note": "That file with the leading use-strict prologue dropped and window.zenuml appended, which is why the checksum matches no upstream file. VENDORED.md spells out the two edits.",
+      "sha256": "9c909136299b14c7c890facebd348e8fdf0de804d14a1a9c0b8a422caee8e4e4"
     },
     "icons.json": {
       "path": "assets/libs/hugo-mod-mermaid/icons.json",
       "package": "@iconify-json/logos",
       "source": "https://cdn.jsdelivr.net/npm/@iconify-json/logos@{version}/icons.json",
-      "sha256": "ba3397c6499ca7d7476e21d8e83b56b4f217c6a959b5e80efd2e832d7c444d03"
+      "sha256": "09198ad7e85796fb49b8d70425c35051c17e54131889262eaf25dbaf06d6eab8"
     }
   }
 }
