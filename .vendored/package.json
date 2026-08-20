@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "description": "Declares the third-party libraries this module vendors under assets/libs/. Never installed at build time or at runtime: it exists so Dependabot tracks their versions and GitHub raises security alerts on the code we actually ship. See ../VENDORED.md.",
   "dependencies": {
-    "@iconify-json/logos": "1.2.12",
+    "@iconify-json/logos": "1.2.13",
     "@mermaid-js/mermaid-zenuml": "0.2.3",
     "mermaid": "11.16.1"
   },
