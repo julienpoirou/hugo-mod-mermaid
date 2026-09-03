@@ -6,7 +6,7 @@
   "dependencies": {
     "@iconify-json/logos": "1.2.12",
     "@mermaid-js/mermaid-zenuml": "0.2.3",
-    "mermaid": "11.16.1"
+    "mermaid": "11.17.2"
   },
   "vendored": {
     "mermaid.min.js": {
