@@ -20,7 +20,7 @@
 {{- end -}}
 {{- if and $zenuml (not (.Page.Scratch.Get "hugoModMermaidZenumlLoaded")) -}}
   {{- $zenlib := resources.Get "libs/hugo-mod-mermaid/mermaid-zenuml.min.js" | fingerprint "sha256" -}}
-  <script defer src="{{ $zenlib.RelPermalink }}" integrity="{{ $zenlib.Data.Integrity }}"></script>
+  <script defer data-hugo-mod-mermaid-zenuml src="{{ $zenlib.RelPermalink }}" integrity="{{ $zenlib.Data.Integrity }}"></script>
   {{- .Page.Scratch.Set "hugoModMermaidZenumlLoaded" true -}}
 {{- end -}}
 {{- if eq $encodedSource "" -}}
@@ -30,6 +30,6 @@
   {{- end -}}
   {{- $encodedSource = $source | base64Encode -}}
 {{- end -}}
-<div class="hugo-mod-mermaid" data-hugo-mod-mermaid data-icons-url="{{ $icons.RelPermalink }}"{{ with .Get "security" }} data-security-level="{{ . }}"{{ end }} data-source="{{ $encodedSource }}">
+<div class="hugo-mod-mermaid" data-hugo-mod-mermaid data-icons-url="{{ $icons.RelPermalink }}"{{ if $zenuml }} data-zenuml="true"{{ end }}{{ with .Get "security" }} data-security-level="{{ . }}"{{ end }} data-source="{{ $encodedSource }}">
   <div class="hugo-mod-mermaid__output" data-mermaid-output></div>
 </div>

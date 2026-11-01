@@ -35,10 +35,6 @@
       const securityLevel = allowed.includes(requested) ? requested : "strict";
       const htmlLabels = securityLevel === "loose";
 
-      if (window.zenuml && window.mermaid.registerExternalDiagrams) {
-        await window.mermaid.registerExternalDiagrams([window.zenuml]);
-      }
-
       if (window.mermaid.registerIconPacks && iconsUrl) {
         window.mermaid.registerIconPacks([
           {
@@ -65,6 +61,38 @@
     return window.__hugoModMermaidReadyPromise;
   };
 
+  let zenumlRegistration;
+
+  const ensureZenuml = async () => {
+    if (zenumlRegistration) return zenumlRegistration;
+
+    zenumlRegistration = (async () => {
+      if (!window.zenuml) {
+        const script = document.querySelector("script[data-hugo-mod-mermaid-zenuml]");
+        if (!script) {
+          throw new Error("Zenuml extension is not available");
+        }
+
+        await new Promise((resolve, reject) => {
+          script.addEventListener("load", resolve, { once: true });
+          script.addEventListener(
+            "error",
+            () => reject(new Error("Zenuml extension failed to load")),
+            { once: true }
+          );
+        });
+      }
+
+      if (!window.zenuml || !window.mermaid.registerExternalDiagrams) {
+        throw new Error("Zenuml extension is not available");
+      }
+
+      await window.mermaid.registerExternalDiagrams([window.zenuml]);
+    })();
+
+    return zenumlRegistration;
+  };
+
   const renderElement = async (element, index) => {
     if (element.dataset.rendered === "true" || !window.mermaid) return;
 
@@ -78,6 +106,10 @@
       }
 
       await ensureReady();
+      if (element.dataset.zenuml === "true") {
+        await ensureZenuml();
+      }
+
       // Mermaid requires a unique id per render call.
       const id = `hugo-mod-mermaid-${index}-${Date.now()}`;
       const rendered = await window.mermaid.render(id, source);
