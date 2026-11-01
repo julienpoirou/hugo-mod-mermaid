@@ -24,9 +24,13 @@ jobs:
       - name: Download actionlint
         run: |
           set -euo pipefail
+          archive="actionlint_1.7.12_linux_amd64.tar.gz"
+          curl --fail --location --silent --show-error --output "$archive" \
+            "https://github.com/rhysd/actionlint/releases/download/v1.7.12/$archive"
+          echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  $archive" \
+            | sha256sum --check --status
           mkdir -p bin
-          curl -sSL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.12/scripts/download-actionlint.bash \
-            | bash -s -- 1.7.12 bin
+          tar --extract --gzip --file "$archive" --directory bin actionlint
 
       - name: Run actionlint
         env:
