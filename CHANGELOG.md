@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1](https://github.com/julienpoirou/hugo-mod-mermaid/compare/v0.2.0...v0.2.1) (2026-11-01)
+
+
+### Corrections 🐛
+
+* **security:** Harden workflows and policy ([1d1f6c3](https://github.com/julienpoirou/hugo-mod-mermaid/commit/1d1f6c3c576561066d1c9f82fa3b84bec5fec663))
+* **zenuml:** Await extension registration ([0271de5](https://github.com/julienpoirou/hugo-mod-mermaid/commit/0271de5182522b82c5c4e36acde8511eb0f18452))
+
 ## [0.2.0](https://github.com/julienpoirou/hugo-mod-mermaid/compare/v0.1.3...v0.2.0) (2026-08-10)
 
 
