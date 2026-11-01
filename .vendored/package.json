@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "description": "Declares the third-party libraries this module vendors under assets/libs/. Never installed at build time or at runtime: it exists so Dependabot tracks their versions and GitHub raises security alerts on the code we actually ship. See ../VENDORED.md.",
   "dependencies": {
-    "@iconify-json/logos": "1.2.12",
+    "@iconify-json/logos": "1.2.18",
     "@mermaid-js/mermaid-zenuml": "0.2.3",
     "mermaid": "12.2.0"
   },
@@ -26,7 +26,7 @@
       "path": "assets/libs/hugo-mod-mermaid/icons.json",
       "package": "@iconify-json/logos",
       "source": "https://cdn.jsdelivr.net/npm/@iconify-json/logos@{version}/icons.json",
-      "sha256": "09198ad7e85796fb49b8d70425c35051c17e54131889262eaf25dbaf06d6eab8"
+      "sha256": "8935ffe6f148e157c281330bcab7387f32b4449094f4db3d3ca9e42d4328b7a3"
     }
   }
 }
