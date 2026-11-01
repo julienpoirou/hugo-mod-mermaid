@@ -5,7 +5,7 @@
   "description": "Declares the third-party libraries this module vendors under assets/libs/. Never installed at build time or at runtime: it exists so Dependabot tracks their versions and GitHub raises security alerts on the code we actually ship. See ../VENDORED.md.",
   "dependencies": {
     "@iconify-json/logos": "1.2.18",
-    "@mermaid-js/mermaid-zenuml": "0.2.3",
+    "@mermaid-js/mermaid-zenuml": "1.0.1",
     "mermaid": "12.2.0"
   },
   "vendored": {
@@ -20,7 +20,7 @@
       "package": "@mermaid-js/mermaid-zenuml",
       "source": "https://cdn.jsdelivr.net/npm/@mermaid-js/mermaid-zenuml@{version}/dist/mermaid-zenuml.min.js",
       "note": "That file with the leading use-strict prologue dropped and window.zenuml appended, which is why the checksum matches no upstream file. VENDORED.md spells out the two edits.",
-      "sha256": "9c909136299b14c7c890facebd348e8fdf0de804d14a1a9c0b8a422caee8e4e4"
+      "sha256": "4dad6128f9a4d8451a4b322fd94fd9e0516ac28cfc470bfc5a4f3b371b8f0a9d"
     },
     "icons.json": {
       "path": "assets/libs/hugo-mod-mermaid/icons.json",

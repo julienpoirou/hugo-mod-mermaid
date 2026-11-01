@@ -7,10 +7,10 @@ All files live in `assets/libs/hugo-mod-mermaid/`.
 | File | Library | Version | License | SHA-256 |
 |---|---|---|---|---|
 | `mermaid.min.js` | [Mermaid](https://github.com/mermaid-js/mermaid) | 12.2.0 | MIT | `a8a6a6f805b074a8261a2825c86f99c8054acb3b35f50bb7e24a4f9f2c3c3b9f` |
-| `mermaid-zenuml.min.js` | [@mermaid-js/mermaid-zenuml](https://github.com/mermaid-js/mermaid) | 0.2.3 | MIT | `9c909136299b14c7c890facebd348e8fdf0de804d14a1a9c0b8a422caee8e4e4` |
+| `mermaid-zenuml.min.js` | [@mermaid-js/mermaid-zenuml](https://github.com/mermaid-js/mermaid) | 1.0.1 | MIT | `4dad6128f9a4d8451a4b322fd94fd9e0516ac28cfc470bfc5a4f3b371b8f0a9d` |
 | `icons.json` | [SVG Logos](https://github.com/gilbarbara/logos) (via @iconify-json/logos) | 1.2.18 | CC0-1.0 | `8935ffe6f148e157c281330bcab7387f32b4449094f4db3d3ca9e42d4328b7a3` |
 
-Sources: `https://cdn.jsdelivr.net/npm/mermaid@12.2.0/dist/mermaid.min.js`, `https://cdn.jsdelivr.net/npm/@mermaid-js/mermaid-zenuml@0.2.3/dist/mermaid-zenuml.min.js`, `https://cdn.jsdelivr.net/npm/@iconify-json/logos@1.2.18/icons.json`.
+Sources: `https://cdn.jsdelivr.net/npm/mermaid@12.2.0/dist/mermaid.min.js`, `https://cdn.jsdelivr.net/npm/@mermaid-js/mermaid-zenuml@1.0.1/dist/mermaid-zenuml.min.js`, `https://cdn.jsdelivr.net/npm/@iconify-json/logos@1.2.18/icons.json`.
 
 `mermaid-zenuml.min.js` is not a pristine upstream file, which is why its checksum matches nothing published as-is. Two edits turn `dist/mermaid-zenuml.min.js` into the vendored copy, and re-applying them is part of updating it:
 
