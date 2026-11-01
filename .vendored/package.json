@@ -26,7 +26,7 @@
       "path": "assets/libs/hugo-mod-mermaid/icons.json",
       "package": "@iconify-json/logos",
       "source": "https://cdn.jsdelivr.net/npm/@iconify-json/logos@{version}/icons.json",
-      "sha256": "09198ad7e85796fb49b8d70425c35051c17e54131889262eaf25dbaf06d6eab8"
+      "sha256": "8935ffe6f148e157c281330bcab7387f32b4449094f4db3d3ca9e42d4328b7a3"
     }
   }
 }
